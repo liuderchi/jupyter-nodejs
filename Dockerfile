@@ -1,32 +1,38 @@
-FROM jupyter/base-notebook
+FROM ubuntu:16.04
+LABEL maintainer="TE-CHI LIU"
 
+# NOTE use node v9 from Dockerfile
+#   https://github.com/notablemind/jupyter-nodejs/blob/master/Dockerfile
+# README https://github.com/notablemind/jupyter-nodejs
+
+ENV DEBIAN_FRONTEND=noninteractive
+# do not stop on apt-get install
 USER root
-RUN wget -O - https://deb.nodesource.com/setup_5.x | bash
-RUN apt-get install -y nodejs g++ make software-properties-common libzmq3-dev
 
-RUN mkdir -p $HOME/jupyter-nodejs
-COPY . $HOME/jupyter-nodejs
-RUN chown -R $NB_USER $HOME/jupyter-nodejs
-WORKDIR $HOME/jupyter-nodejs
-RUN touch /etc/ld.so.conf
-RUN echo "/opt/conda/lib" >> /etc/ld.so.conf
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg
+RUN ["/bin/bash", "-c", "set -o pipefail && wget -O - https://deb.nodesource.com/setup_9.x | bash -"]
+RUN apt-get install -y \
+    nodejs \
+    jupyter \
+    pkg-config
 
-# RUN add-apt-repository ppa:chris-lea/zeromq -y
-# RUN add-apt-repository ppa:chris-lea/libpgm -y
-# RUN apt-get update
-RUN conda install -y jupyter_console
+ENV workdir /root/jupyter-nodejs
 
-USER $NB_USER
+ADD . ${workdir}
+
 RUN mkdir -p $HOME/.ipython/kernels/nodejs/
-RUN npm install
-RUN node install.js
-RUN npm run build
-RUN npm run build-ext
-WORKDIR $HOME/jupyter-nodejs/node_modules/zmq/
-RUN npm run install
 
-USER root
-WORKDIR $HOME/jupyter-nodejs
-RUN ldconfig
+# WIP
+# issues to install zmq
+# RUN apt-get install -y libzmq-dev
+
+# RUN npm install
+# RUN node install.js
+# RUN npm run build
+# RUN npm run build-ext
+
+# TODO CMD jupyter console --kernel nodejs
 
 EXPOSE 8888
