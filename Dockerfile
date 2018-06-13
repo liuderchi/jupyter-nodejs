@@ -1,7 +1,10 @@
 FROM jupyter/base-notebook
 
 USER root
-RUN wget -O - https://deb.nodesource.com/setup_5.x | bash
+
+RUN apt-get update && apt-get install -y \
+    gnupg2
+RUN wget -O - https://deb.nodesource.com/setup_6.x | bash
 RUN apt-get install -y nodejs g++ make software-properties-common libzmq3-dev
 
 RUN mkdir -p $HOME/jupyter-nodejs
