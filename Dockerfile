@@ -15,7 +15,10 @@ RUN apt-get update && apt-get install -y \
 RUN ["/bin/bash", "-c", "set -o pipefail && wget -O - https://deb.nodesource.com/setup_9.x | bash -"]
 RUN apt-get install -y \
     nodejs \
-    jupyter \
+    # jupyter \
+    python2.7 \
+    python-pip \
+    python-dev \
     pkg-config
 
 ENV workdir /root/jupyter-nodejs
