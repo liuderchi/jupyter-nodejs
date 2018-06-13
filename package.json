@@ -30,7 +30,7 @@
     "babel": "^5.1.11",
     "babel-runtime": "^6.23.0",
     "bencode": "^0.7.0",
-    "coffee-script": "^1.9.2",
+    "coffeescript": "^1.9.2",
     "mkdirp": "^0.5.1",
     "superagent": "^1.2.0",
     "zmq": "^2.15.3"

@@ -30,10 +30,8 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 
 
 ENV HOME /root
-# ENV workdir /root/jupyter-nodejs
-# ENV workdir $HOME/jupyter-nodejs
-# CANNOT use $HOME/jupyter-nodejs fails
 ENV SERVER_PORT 8888
+ENV SSH_PORT 22
 
 # NOTE to edit files in host, do
 # $ docker run -v "$PWD":/root/jupyter-nodejs [other options...]
@@ -48,10 +46,13 @@ RUN npm install && node install.js
 RUN npm run build
 RUN npm run build-ext
 
-EXPOSE ${SERVER_PORT}
-EXPOSE 22
+EXPOSE $SERVER_PORT
+EXPOSE $SSH_PORT
 
-CMD ["/usr/sbin/sshd", "-D"]
-# CMD jupyter notebook --allow-root --ip=0.0.0.0
+WORKDIR $HOME
+
+CMD jupyter notebook --ip=0.0.0.0 --port=$SERVER_PORT --allow-root
 #   config server: http://jupyter-notebook.readthedocs.io/en/stable/public_server.html
 # CMD jupyter console --kernel nodejs
+
+# CMD ["/usr/sbin/sshd", "-D"]
