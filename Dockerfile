@@ -1,9 +1,10 @@
 FROM ubuntu:16.04
 LABEL maintainer="TE-CHI LIU"
 
+
 RUN apt-get update && apt-get install -y curl
 RUN ["/bin/bash", "-c", "set -o pipefail && curl -sSL https://deb.nodesource.com/setup_8.x | bash -"]
-# NOTE use node 10 fails
+# use node 10 fails
 RUN apt-get update && apt-get install -y \
     ipython3 \
     python-pip \
@@ -27,25 +28,30 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
-ENV workdir /root/jupyter-nodejs
-# NOTE use $HOME/jupyter-nodejs fails
-ENV serverPort 3000
+
+ENV HOME /root
+# ENV workdir /root/jupyter-nodejs
+# ENV workdir $HOME/jupyter-nodejs
+# CANNOT use $HOME/jupyter-nodejs fails
+ENV SERVER_PORT 8888
 
 # NOTE to edit files in host, do
 # $ docker run -v "$PWD":/root/jupyter-nodejs [other options...]
 
 # NOTE to edit files in container, uncomment this:
-ADD . ${workdir}
+ADD . $HOME/jupyter-nodejs
 
-WORKDIR ${workdir}
+WORKDIR $HOME/jupyter-nodejs
 
 RUN mkdir -p $HOME/.ipython/kernels/nodejs/
 RUN npm install && node install.js
 RUN npm run build
 RUN npm run build-ext
 
-EXPOSE ${serverPort}
+EXPOSE ${SERVER_PORT}
 EXPOSE 22
 
 CMD ["/usr/sbin/sshd", "-D"]
-# jupyter console --kernel nodejs
+# CMD jupyter notebook --allow-root --ip=0.0.0.0
+#   config server: http://jupyter-notebook.readthedocs.io/en/stable/public_server.html
+# CMD jupyter console --kernel nodejs
