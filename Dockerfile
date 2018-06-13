@@ -6,10 +6,17 @@ RUN ["/bin/bash", "-c", "set -o pipefail && curl -sSL https://deb.nodesource.com
 # NOTE use node 10 fails
 RUN apt-get update && apt-get install -y \
     ipython3 \
+    python-pip \
     libczmq-dev \
     pkg-config \
     nodejs \
     openssh-server
+
+# set env for pip install
+RUN export LC_ALL=C
+RUN pip install jupyter
+
+
 RUN mkdir /var/run/sshd
 RUN echo 'root:root' | chpasswd
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
