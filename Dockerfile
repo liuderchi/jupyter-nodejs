@@ -1,35 +1,44 @@
-FROM jupyter/base-notebook
+FROM ubuntu:16.04
+LABEL maintainer="TE-CHI LIU"
 
-USER root
-
+RUN apt-get update && apt-get install -y curl
+RUN ["/bin/bash", "-c", "set -o pipefail && curl -sSL https://deb.nodesource.com/setup_8.x | bash -"]
+# NOTE use node 10 fails
 RUN apt-get update && apt-get install -y \
-    gnupg2
-RUN wget -O - https://deb.nodesource.com/setup_6.x | bash
-RUN apt-get install -y nodejs g++ make software-properties-common libzmq3-dev
+    ipython3 \
+    libczmq-dev \
+    pkg-config \
+    nodejs \
+    openssh-server
+RUN mkdir /var/run/sshd
+RUN echo 'root:root' | chpasswd
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-RUN mkdir -p $HOME/jupyter-nodejs
-COPY . $HOME/jupyter-nodejs
-RUN chown -R $NB_USER $HOME/jupyter-nodejs
-WORKDIR $HOME/jupyter-nodejs
-RUN touch /etc/ld.so.conf
-RUN echo "/opt/conda/lib" >> /etc/ld.so.conf
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
-# RUN add-apt-repository ppa:chris-lea/zeromq -y
-# RUN add-apt-repository ppa:chris-lea/libpgm -y
-# RUN apt-get update
-RUN conda install -y jupyter_console
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
 
-USER $NB_USER
+ENV workdir /root/jupyter-nodejs
+# NOTE use $HOME/jupyter-nodejs fails
+ENV serverPort 3000
+
+# NOTE to edit files in host, do
+# $ docker run -v "$PWD":/root/jupyter-nodejs [other options...]
+
+# NOTE to edit files in container, uncomment this:
+ADD . ${workdir}
+
+WORKDIR ${workdir}
+
 RUN mkdir -p $HOME/.ipython/kernels/nodejs/
-RUN npm install
-RUN node install.js
+RUN npm install && node install.js
 RUN npm run build
 RUN npm run build-ext
-WORKDIR $HOME/jupyter-nodejs/node_modules/zmq/
-RUN npm run install
 
-USER root
-WORKDIR $HOME/jupyter-nodejs
-RUN ldconfig
+EXPOSE ${serverPort}
+EXPOSE 22
 
-EXPOSE 8888
+CMD ["/usr/sbin/sshd", "-D"]
+# jupyter console --kernel nodejs
