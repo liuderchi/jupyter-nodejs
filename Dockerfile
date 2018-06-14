@@ -10,28 +10,14 @@ RUN apt-get update && apt-get install -y \
     python-pip \
     libczmq-dev \
     pkg-config \
-    nodejs \
-    openssh-server
+    nodejs
 
 # set env for pip install
 RUN export LC_ALL=C
 RUN pip install jupyter
 
-
-RUN mkdir /var/run/sshd
-RUN echo 'root:root' | chpasswd
-RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-# SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-
-ENV NOTVISIBLE "in users profile"
-RUN echo "export VISIBLE=now" >> /etc/profile
-
-
 ENV HOME /root
 ENV SERVER_PORT 8888
-ENV SSH_PORT 22
 
 # NOTE to edit files in host, do
 # $ docker run -v "$PWD":/root/jupyter-nodejs [other options...]
@@ -46,10 +32,9 @@ RUN npm install && node install.js
 RUN npm run build
 RUN npm run build-ext
 
-EXPOSE $SERVER_PORT
-EXPOSE $SSH_PORT
-
 WORKDIR $HOME
+
+EXPOSE $SERVER_PORT
 
 CMD jupyter notebook --ip=0.0.0.0 --port=$SERVER_PORT --allow-root
 #   config server: http://jupyter-notebook.readthedocs.io/en/stable/public_server.html
