@@ -3,7 +3,7 @@ LABEL maintainer="TE-CHI LIU"
 
 
 RUN apt-get update && apt-get install -y curl
-RUN ["/bin/bash", "-c", "set -o pipefail && curl -sSL https://deb.nodesource.com/setup_8.x | bash -"]
+RUN ["/bin/bash", "-c", "set -o pipefail && curl -sSL https://deb.nodesource.com/setup_9.x | bash -"]
 # use node 10 fails
 RUN apt-get update && apt-get install -y \
     ipython3 \
