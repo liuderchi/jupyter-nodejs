@@ -1,8 +1,10 @@
-FROM ubuntu:16.04
+FROM debian:stable-slim
 LABEL maintainer="TE-CHI LIU"
 
 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg
 RUN ["/bin/bash", "-c", "set -o pipefail && curl -sSL https://deb.nodesource.com/setup_9.x | bash -"]
 # use node 10 fails
 RUN apt-get update && apt-get install -y \
