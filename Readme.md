@@ -3,6 +3,8 @@ This is a kernel for [Jupyter](http://github.com/ipython/ipython)
 
 Get it while it's hot! or view the [example notebook](http://nbviewer.ipython.org/gist/jaredly/404a36306fdee6a1737a)
 
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/liuderchi/jupyter-nodejs/cf4668e0e56b4e4bc29b8642940fbdbd35490ffc/stack.yml)
+
 ## Prereqs
 - IPython 3.x
 - node
