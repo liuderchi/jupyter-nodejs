@@ -1,6 +1,8 @@
 # Jupyter NodeJS
 This is a kernel for [Jupyter](http://github.com/ipython/ipython)
 
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://raw.githubusercontent.com/liuderchi/jupyter-nodejs/e68522f4c8d3ab65e0fcdbc01a71f6c46c652260/stack.yml)
+
 Get it while it's hot! or view the [example notebook](http://nbviewer.ipython.org/gist/jaredly/404a36306fdee6a1737a)
 
 ## Prereqs
