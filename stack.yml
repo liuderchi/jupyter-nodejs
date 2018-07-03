@@ -5,3 +5,5 @@ services:
         image: liuderchi/jupyter-nodejs
         ports:
             - "8888"
+        volumes:
+            - /root:/root
