@@ -25,9 +25,9 @@ ENV SERVER_PORT 8888
 # $ docker run -v "$PWD":/root/jupyter-nodejs [other options...]
 
 # NOTE to edit files in container, uncomment this:
-ADD . $HOME/jupyter-nodejs
+ADD . /usr/lib/jupyter-nodejs
 
-WORKDIR $HOME/jupyter-nodejs
+WORKDIR /usr/lib/jupyter-nodejs
 
 RUN mkdir -p $HOME/.ipython/kernels/nodejs/
 RUN npm install && node install.js
