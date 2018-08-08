@@ -34,6 +34,9 @@ RUN npm install && node install.js
 RUN npm run build
 RUN npm run build-ext
 
+RUN ln -s $HOME/.jupyter $HOME/__dot_jupyter
+ADD ./custom $HOME/.jupyter/custom
+
 WORKDIR $HOME
 
 EXPOSE $SERVER_PORT
