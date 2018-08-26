@@ -1,64 +1,85 @@
 # Jupyter NodeJS
-This is a kernel for [Jupyter](http://github.com/ipython/ipython)
 
-Get it while it's hot! or view the [example notebook](http://nbviewer.ipython.org/gist/jaredly/404a36306fdee6a1737a)
+📒 A JavaScript Notebook running in Container 🐳 with NodeJS support
 
-## Prereqs
-- IPython 3.x
-- node
-- ZeroMQ
-- pkg-config
+<br/>
+<br/>
 
-## Installation
+![demo-1][demo-1]
+
+## Running Online in [_Play With Docker_][pwd-link] (free)
+
+1. Click [![Try in PWD][try-pwd-img]][try-pwd-link] to launch a new container. After the stack builder is finished, close the dialog.
+
+  ![pwd-run-1][pwd-run-1]
+
+2. Get Access Token by running this command in the terminal prompt:
+
+  ```sh
+  docker logs $(docker container list | awk 'FNR==2{print $1}') 2>&1 \
+    | grep -E 'token=(.*)' -o | cut -c7-54
+  ```
+
+3. Click the link above to access Jupyter page:
+
+  ![pwd-run-2][pwd-run-2]
+
+4. In page paste the token in the input field to login
+
+  ![pwd-run-3][pwd-run-3]
+
+5. 🎉 Congrats! Now you can create a NodeJS Notebook!
+
+  ![pwd-run-4][pwd-run-4]
+
+## Run in Your Local Machine
+
+1. Run Following command in your terminal:
+
+  ```bash
+  docker run -d -p 8888:8888 liuderchi/jupyter-nodejs:latest
+  ```
+
+2. Run following command to get Jupyter token. Then Copy it.
+
+  ```bash
+  docker logs $(docker container list | awk 'FNR==2{print $1}') 2>&1 \
+      | grep -E 'token=(.*)' -o | cut -c7-54
+  ```
+
+3. in browser go to `localhost:8888?token=PASTE_JUPYTER_TOKEN_HERE`
+
+
+## Develop Your Custom Script
+
 ```bash
-git clone https://github.com/notablemind/jupyter-nodejs.git
-cd jupyter-nodejs
-mkdir -p ~/.ipython/kernels/nodejs/
-npm install && node install.js
-npm run build
-npm run build-ext
-jupyter console --kernel nodejs
+$ git clone https://github.com/liuderchi/jupyter-nodejs.git
+$ cd learn-js-in-jupyter
+$ docker run -d -p 8888:8888 \
+  -v $PWD/custom:/root/.jupyter/custom \
+  liuderchi/jupyter-nodejs:latest
+# print jupyter token
+$ docker logs $(docker container list | awk 'FNR==2{print $1}') 2>&1 \
+  | grep -E 'token=(.*)' -o | cut -c7-54
 ```
 
-And viola!
+in browser go to `localhost:8888?token=PASTE_JUPYTER_TOKEN_HERE`
 
-![image](https://cloud.githubusercontent.com/assets/112170/7268122/a33b186c-e882-11e4-8463-be00a6c90163.png)
+## Inspiration
 
+This project is a fork from [notablemind/jupyter-nodejs][notablemind/jupyter-nodejs]
 
-Also, in the iPython notebook:
+## License
 
-![image](https://cloud.githubusercontent.com/assets/112170/7268108/70cade4e-e882-11e4-95e7-8a7375b3b888.png)
+[MIT License][mit-license]
 
-
-
-## Supported features:
-
-- tab-completion (both for variables and **paths**)
-- error reporting
-- magics! The available extensions can be configured via `package/config.js`
-
-## Installation
-`node install.js [install-dir]` will install the `kernel.json` file that ipython looks for. The default is for linux machines, `~/.ipython/kernels/nodejs/`. You will have to specify an install dir for Mac and Windows (see [the docs](https://ipython.org/ipython-doc/dev/development/kernels.html#kernel-specs) for info about what that should be)
-
-## BabelJS Magic for es6+ goodness
-`%load_ext babel` and then
-
-```javascript
-%%babel
-class Awesome {
-  constructor() {
-    console.log('yeah!')
-  }
-}
-```
-
-**Hovever:** `import ...` syntax *doesn't work* because of [live bindings](https://github.com/ModuleLoader/es6-module-loader/wiki/Circular-References-&-Bindings#es6-circular-references--bindings) foo, so just use `require()` normally and all will be well.
-
-## Clojurescript compilation via a [himera](https://github.com/fogus/himera) server
-
-`%load_ext clojurescript http://himera-emh.herokuapp.com` and then
-
-```clojure
-%%clojurescript
-(clojurey goodness)
-```
+[demo-1]: https://user-images.githubusercontent.com/4994705/44618252-22b29800-a8a5-11e8-938e-ffaca3c80718.png
+[pwd-link]: https://labs.play-with-docker.com/
+[try-pwd-img]: https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png
+[try-pwd-link]: http://play-with-docker.com?stack=https://raw.githubusercontent.com/liuderchi/jupyter-nodejs/master/stack.yml
+[pwd-run-1]: https://user-images.githubusercontent.com/4994705/44618078-d87be780-a8a1-11e8-9226-7f36616f90cc.png
+[pwd-run-2]: https://user-images.githubusercontent.com/4994705/42303031-6e6cbebe-8051-11e8-8dea-928481c0f4e4.png
+[pwd-run-3]: https://user-images.githubusercontent.com/4994705/44618015-c51c4c80-a8a0-11e8-903a-5627ee53a153.png
+[pwd-run-4]: https://user-images.githubusercontent.com/4994705/44618387-5393cc80-a8a7-11e8-9518-dcadb04c449f.png
+[notablemind/jupyter-nodejs]: https://github.com/notablemind/jupyter-nodejs
+[mit-license]: https://liuderchi.mit-license.org/ 'mit-license'

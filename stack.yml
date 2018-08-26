@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  jupyter:
+    container_name: web
+    image: liuderchi/jupyter-nodejs
+    ports:
+      - "8888"
